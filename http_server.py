@@ -11,6 +11,13 @@ class MyServer(BaseHTTPRequestHandler):
         Специальный класс, который отвечает за
         обработку входящих запросов от клиентов
     """
+    urls_path = {
+        "/index": "index.html",
+        "/catalog": "catalog.html",
+        "/category": "category.html",
+        "/contacts": "contacts.html",
+        "default": "contacts.html"
+    }
 
 
     def do_GET(self):
@@ -19,10 +26,15 @@ class MyServer(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         # Отправка типа данных, который будет передаваться
         self.end_headers() # Завершение формирования заголовков ответа
+        q = self.urls_path.get(self.path)
+        if q!=None:
+            with open("contacts.html", "r", encoding="utf-8") as f:
 
-        with open("contacts.html", "r", encoding="utf-8") as f:
+                self.wfile.write(bytes(f.read(), "utf-8")) # Тело ответа
+        else:
+            with open("contacts.html", "r", encoding="utf-8") as f:
 
-            self.wfile.write(bytes(f.read(), "utf-8")) # Тело ответа
+                self.wfile.write(bytes(f.read(), "utf-8"))
 
 if __name__ == "__main__":
     # Инициализация веб-сервера, который будет по заданным параметрах в сети
